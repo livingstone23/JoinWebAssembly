@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ThirdPartyChatLib\ThirdPartyChatLib.csproj" />
     <ProjectReference Include="..\Shared\JOIN.WASM.Shared.csproj" />
   </ItemGroup>
 
