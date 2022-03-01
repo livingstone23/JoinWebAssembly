@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+//1.1 Configurar swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddEntityFrameworkSqlite().AddDbContext<BlazingChatContext>();
 
 var app = builder.Build();
@@ -24,7 +28,11 @@ else
     app.UseHsts();
 }
 
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
+
+app.UseSwagger();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
