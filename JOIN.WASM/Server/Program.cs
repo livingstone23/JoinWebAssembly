@@ -1,3 +1,4 @@
+using JOIN.WASM.Server.Models;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddEntityFrameworkSqlite().AddDbContext<BlazingChatContext>();
 
 var app = builder.Build();
 
