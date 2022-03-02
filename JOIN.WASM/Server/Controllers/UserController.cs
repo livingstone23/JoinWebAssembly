@@ -23,6 +23,7 @@ namespace JOIN.WASM.Server.Controllers
             _context = context;
         }
 
+
         [HttpGet]
         public List<Contact> Get()
         {
@@ -37,6 +38,7 @@ namespace JOIN.WASM.Server.Controllers
 
             return contacts;
         }
+
 
         [HttpPut("updateprofile/{userId}")]
         public async Task<User> UpdateProfile(int userId, [FromBody] User user)
