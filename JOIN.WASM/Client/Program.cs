@@ -5,17 +5,25 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
+
+
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IProfileViewModel, ProfileViewModelV2>();
+builder.Services.AddSingleton<IProfileViewModel, ProfileViewModel>();
+builder.Services.AddSingleton<IContactsViewModel, ContactsViewModel>();
+builder.Services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
+
+await builder.Build().RunAsync();
 
 
-//Starting method GetProfile
-var host = builder.Build();
 
-var profileViewModel = host.Services.GetRequiredService<IProfileViewModel>();
-profileViewModel.GetProfile();
+////Starting method GetProfile
+///Capitol 08
+//var host = builder.Build();
 
-await host.RunAsync();
+//var profileViewModel = host.Services.GetRequiredService<IProfileViewModel>();
+//profileViewModel.GetProfile();
+
+//await host.RunAsync();

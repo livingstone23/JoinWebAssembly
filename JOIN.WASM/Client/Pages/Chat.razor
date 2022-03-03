@@ -1,14 +1,9 @@
-﻿@page "/chat"
-@page "/chat/{ToUserId:int}"
+﻿@page "/chat/{ContactId:int}"
 
+<h1> this is chat page of @ContactId</h1>
 
-<ThirdPartyChat ToUserId=ToUserId>
-
-</ThirdPartyChat>
-
-@code {
+@code{
 
     [Parameter]
-    public int ToUserId { get; set; }
-
+    public int ContactId { get; set; }
 }

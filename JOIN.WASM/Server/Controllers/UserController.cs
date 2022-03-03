@@ -1,12 +1,12 @@
 using JOIN.WASM.Server.Models;
-using JOIN.WASM.Shared;
+using JOIN.WASM.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JOIN.WASM.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -19,46 +19,57 @@ namespace JOIN.WASM.Server.Controllers
 
         public UserController(ILogger<UserController> logger, BlazingChatContext context)
         {
-            _logger = logger;
-            _context = context;
+            this._logger = logger;
+            this._context = context;
         }
 
-
-        [HttpGet]
-        public List<Contact> Get()
+        [HttpGet("getcontacts")]
+        public List<User> GetContacts()
         {
-            List<User> users = _context.Users.ToList();
-            List<Contact> contacts = new List<Contact>();
-            int i = 1;
-
-            foreach(var user in users)
-            {
-                contacts.Add(new Contact(i++, user.FirstName, user.LastName));
-            }
-
-            return contacts;
+            return _context.Users.ToList();
         }
-
 
         [HttpPut("updateprofile/{userId}")]
         public async Task<User> UpdateProfile(int userId, [FromBody] User user)
         {
-
             User userToUpdate = await _context.Users.Where(u => u.UserId == userId).FirstOrDefaultAsync();
 
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
             userToUpdate.EmailAddress = user.EmailAddress;
+            userToUpdate.AboutMe = user.AboutMe;
 
             await _context.SaveChangesAsync();
 
-            return await Task.FromResult(userToUpdate);
+            return await Task.FromResult(user);
         }
 
         [HttpGet("getprofile/{userId}")]
         public async Task<User> GetProfile(int userId)
         {
             return await _context.Users.Where(u => u.UserId == userId).FirstOrDefaultAsync();
+        }
+
+        [HttpGet("updatetheme")]
+        public async Task<User> UpdateTheme(string userId, string value)
+        {
+            User user = _context.Users.Where(u => u.UserId == Convert.ToInt32(userId)).FirstOrDefault();
+            user.DarkTheme = value == "True" ? 1 : 0;
+
+            await _context.SaveChangesAsync();
+
+            return await Task.FromResult(user);
+        }
+
+        [HttpGet("updatenotifications")]
+        public async Task<User> UpdateNotifications(string userId, string value)
+        {
+            User user = _context.Users.Where(u => u.UserId == Convert.ToInt32(userId)).FirstOrDefault();
+            user.Notifications = value == "True" ? 1 : 0;
+
+            await _context.SaveChangesAsync();
+
+            return await Task.FromResult(user);
         }
 
 

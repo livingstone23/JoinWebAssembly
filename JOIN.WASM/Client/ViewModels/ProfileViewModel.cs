@@ -1,4 +1,6 @@
-﻿using JOIN.WASM.Shared.Models;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using JOIN.WASM.Shared.Models;
 
 namespace JOIN.WASM.Client.ViewModels
 {
@@ -8,27 +10,63 @@ namespace JOIN.WASM.Client.ViewModels
     public class ProfileViewModel: IProfileViewModel
     {
 
-        public long UserId { get; set; }
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
         public string Message { get; set; }
+        public string AboutMe { get; set; }
+
+        private HttpClient _httpClient;
 
 
-        public void UpdateProfile()
+        //public void UpdateProfile()
+        //{
+        //    //User user = _profileViewModel;
+        //    //await HttpClient.PutAsJsonAsync("user/updateprofile/10", user);
+        //    this.Message = this.FirstName + "'s Profile updated successfully";
+        //}
+
+        //public void GetProfile()
+        //{
+        //    //User user = await HttpClient.GetFromJsonAsync<User>("user/getprofile/10");
+        //    //_profileViewModel = user;
+        //    this.FirstName = "John";
+        //    this.Message = this.FirstName + "'s Profile loaded successfully";
+        //}
+
+        public ProfileViewModel()
         {
-            //User user = _profileViewModel;
-            //await HttpClient.PutAsJsonAsync("user/updateprofile/10", user);
-            this.Message = this.FirstName + "'s Profile updated successfully";
+
         }
 
-        public void GetProfile()
+        public ProfileViewModel(HttpClient httpClient)
         {
-            //User user = await HttpClient.GetFromJsonAsync<User>("user/getprofile/10");
-            //_profileViewModel = user;
-            this.FirstName = "John";
-            this.Message = this.FirstName + "'s Profile loaded successfully";
+            _httpClient = httpClient;
         }
+
+        public async Task UpdateProfile()
+        {
+            User user = this;
+            await _httpClient.PutAsJsonAsync($"api/user/getprofile/10", user);
+            this.Message = "Profile updated successfully";
+        }
+
+        public async Task GetProfile()
+        {
+            User user = await _httpClient.GetFromJsonAsync<User>($"api/user/getprofile/10");
+            LoadCurrentObject(user);
+            this.Message = "Profile loaded successfully";
+        }
+        private void LoadCurrentObject(ProfileViewModel profileViewModel)
+        {
+            this.FirstName = profileViewModel.FirstName;
+            this.LastName = profileViewModel.LastName;
+            this.EmailAddress = profileViewModel.EmailAddress;
+            this.AboutMe = profileViewModel.AboutMe;
+            //add more fields
+        }
+
 
         public static implicit operator ProfileViewModel(User user)
         {
@@ -37,7 +75,8 @@ namespace JOIN.WASM.Client.ViewModels
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 EmailAddress = user.EmailAddress,
-                UserId = user.UserId
+                UserId = user.UserId,
+                AboutMe = user.AboutMe
             };
         }
 
@@ -48,7 +87,8 @@ namespace JOIN.WASM.Client.ViewModels
                 FirstName = profileViewModel.FirstName,
                 LastName = profileViewModel.LastName,
                 EmailAddress = profileViewModel.EmailAddress,
-                UserId = profileViewModel.UserId
+                UserId = profileViewModel.UserId,
+                AboutMe = profileViewModel.AboutMe
             };
         }
 

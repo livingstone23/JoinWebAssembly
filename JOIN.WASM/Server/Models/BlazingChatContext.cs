@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JOIN.WASM.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -49,15 +50,15 @@ namespace JOIN.WASM.Server.Models
                     .HasColumnType("INT")
                     .HasColumnName("to_user_id");
 
-                entity.HasOne(d => d.FromUser)
-                    .WithMany(p => p.ChatHistoryFromUsers)
-                    .HasForeignKey(d => d.FromUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                //entity.HasOne(d => d.FromUser)
+                //    .WithMany(p => p.ChatHistoryFromUsers)
+                //    .HasForeignKey(d => d.FromUserId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.ToUser)
-                    .WithMany(p => p.ChatHistoryToUsers)
-                    .HasForeignKey(d => d.ToUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                //entity.HasOne(d => d.ToUser)
+                //    .WithMany(p => p.ChatHistoryToUsers)
+                //    .HasForeignKey(d => d.ToUserId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -68,15 +69,15 @@ namespace JOIN.WASM.Server.Models
 
                 entity.Property(e => e.AboutMe).HasColumnName("about_me");
 
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("DATE")
-                    .HasColumnName("created_date");
+                //entity.Property(e => e.CreatedDate)
+                //    .HasColumnType("DATE")
+                //    .HasColumnName("created_date");
 
                 entity.Property(e => e.DarkTheme).HasColumnName("dark_theme");
 
-                entity.Property(e => e.DateOfBirth)
-                    .HasColumnType("DATETIME")
-                    .HasColumnName("date_of_birth");
+                //entity.Property(e => e.DateOfBirth)
+                //    .HasColumnType("DATETIME")
+                //    .HasColumnName("date_of_birth");
 
                 entity.Property(e => e.EmailAddress).HasColumnName("email_address");
 
@@ -86,11 +87,11 @@ namespace JOIN.WASM.Server.Models
 
                 entity.Property(e => e.Notifications).HasColumnName("notifications");
 
-                entity.Property(e => e.Password).HasColumnName("password");
+                //entity.Property(e => e.Password).HasColumnName("password");
 
-                entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
+                //entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
 
-                entity.Property(e => e.Source).HasColumnName("source");
+                //entity.Property(e => e.Source).HasColumnName("source");
             });
 
             OnModelCreatingPartial(modelBuilder);
