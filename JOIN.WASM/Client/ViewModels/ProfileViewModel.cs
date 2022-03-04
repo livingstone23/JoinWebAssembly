@@ -10,7 +10,7 @@ namespace JOIN.WASM.Client.ViewModels
     public class ProfileViewModel: IProfileViewModel
     {
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
@@ -48,18 +48,19 @@ namespace JOIN.WASM.Client.ViewModels
         public async Task UpdateProfile()
         {
             User user = this;
-            await _httpClient.PutAsJsonAsync($"api/user/getprofile/10", user);
+            await _httpClient.PutAsJsonAsync($"api/user/updateprofile/" + this.UserId, user);
             this.Message = "Profile updated successfully";
         }
 
         public async Task GetProfile()
         {
-            User user = await _httpClient.GetFromJsonAsync<User>($"api/user/getprofile/10");
+            User user = await _httpClient.GetFromJsonAsync<User>($"api/user/getprofile/"+ this.UserId);
             LoadCurrentObject(user);
             this.Message = "Profile loaded successfully";
         }
         private void LoadCurrentObject(ProfileViewModel profileViewModel)
         {
+            this.UserId = profileViewModel.UserId;
             this.FirstName = profileViewModel.FirstName;
             this.LastName = profileViewModel.LastName;
             this.EmailAddress = profileViewModel.EmailAddress;

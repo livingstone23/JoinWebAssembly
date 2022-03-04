@@ -1,8 +1,13 @@
 ﻿@page "/profile"
 @using JOIN.WASM.Client.ViewModels
 @using JOIN.WASM.Shared.Models
+@using System.Security.Claims
 @inject IProfileViewModel _profileViewModel
+@inject NavigationManager _navigationManager
 
+
+@*AutenticaionStateInjection*@
+@*@inject AuthenticationStateProvider _authenticationStateProvider*@
 
 <div class="col-12">
     <input type="text" @bind-value="_profileViewModel.FirstName" class="form-control" placeholder="first name">
@@ -20,7 +25,33 @@
 
 @code {
 
-    protected override async Task OnInitializedAsync() => await _profileViewModel.GetProfile();
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //Using AutenticationState
+        var authState = await authenticationState;
+
+        //AutenticationStateInjection
+        //var authState = await _authenticationStateProvider.GetAuthenticationStateAsync(); 
+
+
+        var user = authState.User;
+        
+        if(user.Identity.IsAuthenticated)
+        {
+            var claim = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+            _profileViewModel.UserId = Convert.ToInt64(claim?.Value) ;
+            await _profileViewModel.GetProfile();
+        }
+        else
+        {
+            _navigationManager.NavigateTo("/");
+        }
+
+    }
 
 }
 

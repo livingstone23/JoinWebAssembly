@@ -15,7 +15,7 @@ namespace JOIN.WASM.Shared.Models
         //    ChatHistoryToUsers = new HashSet<ChatHistory>();
         //}
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
         //public string Source { get; set; }
