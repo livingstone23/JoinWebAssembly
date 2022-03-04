@@ -87,7 +87,7 @@ namespace JOIN.WASM.Server.Models
 
                 entity.Property(e => e.Notifications).HasColumnName("notifications");
 
-                //entity.Property(e => e.Password).HasColumnName("password");
+                entity.Property(e => e.Password).HasColumnName("password");
 
                 //entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
 

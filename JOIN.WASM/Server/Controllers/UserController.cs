@@ -1,7 +1,9 @@
 using JOIN.WASM.Server.Models;
 using JOIN.WASM.Shared.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace JOIN.WASM.Server.Controllers
 {
@@ -28,6 +30,57 @@ namespace JOIN.WASM.Server.Controllers
         {
             return _context.Users.ToList();
         }
+
+
+        //Authentication Methods
+        //11.6.1-Habilitando la Autenticacion - Metodo login
+        [HttpPost("loginuser")]
+        public async Task<ActionResult<User>> LoginUser(User user)
+        {
+            User loggedInUser = await _context.Users.Where(u => u.EmailAddress == user.EmailAddress && u.Password == user.Password).FirstOrDefaultAsync();
+
+            if (loggedInUser != null)
+            {
+                //create a claim
+                var claim = new Claim(ClaimTypes.Name, loggedInUser.EmailAddress);
+                
+                //create claimsIdentity
+                var claimsIdentity = new ClaimsIdentity(new[] { claim }, "serverAuth");
+                
+                //create claimsPrincipal
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                
+                //Sign In User
+                await HttpContext.SignInAsync(claimsPrincipal);
+            }
+
+            return await Task.FromResult(loggedInUser);
+        }
+
+
+        //11.6.2-Habilitando la Autenticacion - Metodo usuario actual
+        [HttpGet("getcurrentuser")]
+        public async Task<ActionResult<User>> GetCurrentUser()
+        {
+            User currentUser = new User();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                currentUser.EmailAddress = User.FindFirstValue(ClaimTypes.Name);
+            }
+
+            return await Task.FromResult(currentUser);
+        }
+
+
+        //11.6.3-Habilitando la Autenticacion - Metodo de cierre de sesion
+        [HttpGet("logoutuser")]
+        public async Task<ActionResult<String>> LogOutUser()
+        {
+            await HttpContext.SignOutAsync();
+            return "Success";
+        }
+
 
         [HttpPut("updateprofile/{userId}")]
         public async Task<User> UpdateProfile(int userId, [FromBody] User user)

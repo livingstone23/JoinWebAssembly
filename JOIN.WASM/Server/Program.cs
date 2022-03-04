@@ -1,4 +1,5 @@
 using JOIN.WASM.Server.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddEntityFrameworkSqlite().AddDbContext<BlazingChatContext>();
+
+//11.1-Habilitando la Autenticacion
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie();
 
 var app = builder.Build();
 
@@ -38,6 +45,9 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//11.2-Habilitando la Autenticacion
+app.UseAuthentication();
 
 
 app.MapRazorPages();
