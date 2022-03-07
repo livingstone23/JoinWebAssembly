@@ -20,7 +20,8 @@ namespace JOIN.WASM.Client.ViewModels
         public string Message { get; set; }
         public string AboutMe { get; set; }
 
-       
+        public string ProfilePicDataUrl { get; set; }
+
         public ProfileViewModel()
         {
 
@@ -51,11 +52,12 @@ namespace JOIN.WASM.Client.ViewModels
 
         private void LoadCurrentObject(ProfileViewModel profileViewModel)
         {
-            this.UserId = profileViewModel.UserId;
+            //this.UserId = profileViewModel.UserId;
             this.FirstName = profileViewModel.FirstName;
             this.LastName = profileViewModel.LastName;
             this.EmailAddress = profileViewModel.EmailAddress;
             this.AboutMe = profileViewModel.AboutMe;
+            this.ProfilePicDataUrl = profileViewModel.ProfilePicDataUrl;
             //add more fields
         }
 
@@ -68,7 +70,8 @@ namespace JOIN.WASM.Client.ViewModels
                 LastName = user.LastName,
                 EmailAddress = user.EmailAddress,
                 UserId = user.UserId,
-                AboutMe = user.AboutMe
+                AboutMe = user.AboutMe,
+                ProfilePicDataUrl = user.ProfilePicDataUrl
             };
         }
 
@@ -81,7 +84,8 @@ namespace JOIN.WASM.Client.ViewModels
                 LastName = profileViewModel.LastName,
                 EmailAddress = profileViewModel.EmailAddress,
                 UserId = profileViewModel.UserId,
-                AboutMe = profileViewModel.AboutMe
+                AboutMe = profileViewModel.AboutMe,
+                ProfilePicDataUrl = profileViewModel.ProfilePicDataUrl
             };
         }
 

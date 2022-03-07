@@ -21,7 +21,10 @@ namespace JOIN.WASM.Shared.Models
         public string Source { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        //public string ProfilePictureUrl { get; set; }
+        
+        public string ProfilePictureUrl { get; set; }
+        public string ProfilePicDataUrl { get; set; }
+
         //public byte[] DateOfBirth { get; set; }
         public string AboutMe { get; set; }
         public int Notifications { get; set; }

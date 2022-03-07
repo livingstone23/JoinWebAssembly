@@ -11,6 +11,8 @@
 
         public string AboutMe { get; set; }
 
+        public string ProfilePicDataUrl { get; set; }
+
         //public void UpdateProfile();
         //public void GetProfile();
 

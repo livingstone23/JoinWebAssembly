@@ -112,6 +112,7 @@ namespace JOIN.WASM.Server.Controllers
             userToUpdate.LastName = user.LastName;
             userToUpdate.EmailAddress = user.EmailAddress;
             userToUpdate.AboutMe = user.AboutMe;
+            userToUpdate.ProfilePicDataUrl = user.ProfilePicDataUrl;
 
             await _context.SaveChangesAsync();
 

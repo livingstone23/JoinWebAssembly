@@ -89,7 +89,9 @@ namespace JOIN.WASM.Server.Models
 
                 entity.Property(e => e.Password).HasColumnName("password");
 
-                //entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
+                entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
+
+                entity.Property(e => e.ProfilePicDataUrl).HasColumnName("profile_pic_data_url");
 
                 entity.Property(e => e.Source).HasColumnName("source");
             });
