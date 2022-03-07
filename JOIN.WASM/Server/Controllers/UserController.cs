@@ -39,12 +39,15 @@ namespace JOIN.WASM.Server.Controllers
         [HttpPost("loginuser")]
         public async Task<ActionResult<User>> LoginUser(User user)
         {
+            //User loggedInUser = await _context.Users.Where(u => u.EmailAddress == user.EmailAddress && u.Password == user.Password).FirstOrDefaultAsync();
+
+            //user.Password = Utility.Encrypt(user.Password);
             User loggedInUser = await _context.Users.Where(u => u.EmailAddress == user.EmailAddress && u.Password == user.Password).FirstOrDefaultAsync();
 
             if (loggedInUser != null)
             {
                 //create a claim
-                var claim = new Claim(ClaimTypes.Name, loggedInUser.EmailAddress);
+                var claim = new Claim(ClaimTypes.Email, loggedInUser.EmailAddress);
                 
                 //create claimsIdentity
                 var claimsIdentity = new ClaimsIdentity(new[] { claim }, "serverAuth");
