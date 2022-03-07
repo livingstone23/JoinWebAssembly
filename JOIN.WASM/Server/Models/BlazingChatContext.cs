@@ -91,7 +91,7 @@ namespace JOIN.WASM.Server.Models
 
                 //entity.Property(e => e.ProfilePictureUrl).HasColumnName("profile_picture_url");
 
-                //entity.Property(e => e.Source).HasColumnName("source");
+                entity.Property(e => e.Source).HasColumnName("source");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -18,6 +18,13 @@
 <div class="col-6">
     <button class="btn btn-primary" @onclick="LoginUser">Login</button>
 </div>
+<br />
+<div class="col-6">
+    <a class="btn btn-block btn-social btn-google" @onclick="GoogleSignIn">
+        <span class="fa fa-google"></span> <b>Sign in with Google</b>
+    </a>
+</div>
+
 
 @code {
 
@@ -28,5 +35,10 @@
         await _loginViewModel.LoginUser();
         _navigationManager.NavigateTo("/profile",true);
 
+    }
+
+    private void GoogleSignIn()
+    {
+        _navigationManager.NavigateTo("api/user/GoogleSignIn", true);
     }
 }

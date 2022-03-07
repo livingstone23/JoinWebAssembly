@@ -1,6 +1,8 @@
+using JOIN.WASM.Server.Helpers;
 using JOIN.WASM.Server.Models;
 using JOIN.WASM.Shared.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -66,8 +68,23 @@ namespace JOIN.WASM.Server.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                var emailAddress = User.FindFirstValue(ClaimTypes.Name);
-                currentUser = await _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefaultAsync();
+                currentUser.EmailAddress = User.FindFirstValue(ClaimTypes.Email);
+                currentUser = await _context.Users.Where(u => u.EmailAddress == currentUser.EmailAddress).FirstOrDefaultAsync();
+
+
+                //Seccion para controlar si usuario vienes por seguridad de un tercer proveedor 
+                //ejemplo google.
+                if (currentUser == null)
+                {
+                    currentUser = new User();
+                    currentUser.UserId = _context.Users.Max(user => user.UserId) + 1;
+                    currentUser.EmailAddress = User.FindFirstValue(ClaimTypes.Email);
+                    currentUser.Password = Utility.Encrypt(currentUser.EmailAddress);
+                    currentUser.Source = "EXTL";
+
+                    _context.Users.Add(currentUser);
+                    await _context.SaveChangesAsync();
+                }
             }
 
             return await Task.FromResult(currentUser);
@@ -98,11 +115,13 @@ namespace JOIN.WASM.Server.Controllers
             return await Task.FromResult(user);
         }
 
+
         [HttpGet("getprofile/{userId}")]
         public async Task<User> GetProfile(int userId)
         {
             return await _context.Users.Where(u => u.UserId == userId).FirstOrDefaultAsync();
         }
+
 
         [HttpGet("updatetheme")]
         public async Task<User> UpdateTheme(string userId, string value)
@@ -115,6 +134,7 @@ namespace JOIN.WASM.Server.Controllers
             return await Task.FromResult(user);
         }
 
+
         [HttpGet("updatenotifications")]
         public async Task<User> UpdateNotifications(string userId, string value)
         {
@@ -125,6 +145,18 @@ namespace JOIN.WASM.Server.Controllers
 
             return await Task.FromResult(user);
         }
+
+
+        /// <summary>
+        /// Metodo para realizar la autenticacion via google.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GoogleSignIn")]
+        public async Task GoogleSignIn()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties { RedirectUri = "/profile" });
+        }
+
 
 
     }
