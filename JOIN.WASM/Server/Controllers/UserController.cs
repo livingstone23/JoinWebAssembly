@@ -162,6 +162,24 @@ namespace JOIN.WASM.Server.Controllers
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("DownloadServerFile")]
+        public async Task<string> DownloadServerFile()
+        {
+            var filePath = @"C:\LCANO\GITHUB\JoinWebAssembly\JOIN.WASM\Server\Documents\TEST.docx";
+
+            using (var fileInput = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                await fileInput.CopyToAsync(memoryStream);
+
+                var buffer = memoryStream.ToArray();
+                return Convert.ToBase64String(buffer);
+            }
+        }
 
     }
 }

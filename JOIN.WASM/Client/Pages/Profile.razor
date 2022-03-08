@@ -4,6 +4,8 @@
 @using System.Security.Claims
 @inject IProfileViewModel _profileViewModel
 @inject NavigationManager _navigationManager
+@inject IJSRuntime jsRuntime 
+@inject HttpClient _httpClient
 
 
 @*AutenticaionStateInjection*@
@@ -29,7 +31,9 @@
         <textarea class="form-control" @bind="_profileViewModel.AboutMe" placeholder="about me"></textarea>
         <br/>
         <button class="btn btn-primary" @onclick="_profileViewModel.UpdateProfile">Update Profile</button>
-        <span>&nbsp;&nbsp;</span>@_profileViewModel.Message
+        <button class="btn btn-primary" @onclick="DownloadProfilePicture">Download Profile Picture</button>
+        <button class="btn btn-primary" @onclick="DownloadServerFile">Download a Document</button>
+        
     </div>
 
 </div>
@@ -37,11 +41,13 @@
 
 @code {
 
+
     [CascadingParameter]
     public Task<AuthenticationState> authenticationState { get; set; }
 
+
     /// <summary>
-    /// This method put file to save in database 
+    /// Method put file to save in database 
     /// </summary>
     /// <param name="inputFileChangeEvent"></param>
     /// <returns></returns>
@@ -57,6 +63,33 @@
         //convert byte array to base 64 string
         _profileViewModel.ProfilePicDataUrl = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
     }
+
+
+    /// <summary>
+    /// Method for download th picture
+    /// </summary>
+    /// <returns></returns>
+    private async Task DownloadProfilePicture()
+    {
+        string[] base64String = _profileViewModel.ProfilePicDataUrl.Split(',');
+        await jsRuntime.InvokeVoidAsync("downloadFile","image/png",base64String[1],"profile.png");
+    }
+
+
+    /// <summary>
+    /// Method for download define document
+    /// </summary>
+    /// <returns></returns>
+    private async Task DownloadServerFile()
+    {
+        //get base64 string from web api call
+        var httpResponseMessage = await _httpClient.GetAsync($"api/user/DownloadServerFile");
+        var base64String = httpResponseMessage.Content.ReadAsStringAsync().Result;
+
+        //call javascript function to download the file
+        await jsRuntime.InvokeVoidAsync("downloadFile","application/vnd.openxmlformats-officedocument.wordprocessingml.document",base64String, "document.docx");
+    }
+
 
 
     protected override async Task OnInitializedAsync()
