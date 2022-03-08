@@ -30,6 +30,34 @@ namespace JOIN.WASM.Client.ViewModels
             }
         }
 
+        public async Task<List<Contact>> GetAllContacts()
+        {
+            List<User> users = await _httpClient.GetFromJsonAsync<List<User>>("api/user/getallcontacts");
+            LoadCurrentObject(users);
+            return Contacts;
+        }
 
+        public async Task<List<Contact>> GetOnlyVisibleContacts(int startIndex, int count)
+        {
+            List<User> users = await _httpClient.GetFromJsonAsync<List<User>>($"api/user/getonlyvisiblecontacts?startIndex={startIndex}&count={count}");
+
+            LoadCurrentObject(users);
+            return Contacts;
+        }
+
+        public async Task<int> GetContactsCount()
+        {
+            return await _httpClient.GetFromJsonAsync<int>($"api/user/getcontactscount");
+        }
+
+        public async Task<List<Contact>> GetVisibleContacts(int startIndex, int count)
+        {
+            List<User> users = await _httpClient.GetFromJsonAsync<List<User>>($"api/user/getvisiblecontacts?startIndex={startIndex}&count={count}");
+
+            LoadCurrentObject(users);
+            return Contacts;
+        }
+
+        
     }
 }

@@ -71,8 +71,16 @@
     /// <returns></returns>
     private async Task DownloadProfilePicture()
     {
+
         string[] base64String = _profileViewModel.ProfilePicDataUrl.Split(',');
-        await jsRuntime.InvokeVoidAsync("downloadFile","image/png",base64String[1],"profile.png");
+
+        //Using javascript withOut Isolation
+        //await jsRuntime.InvokeVoidAsync("downloadFile","image/png",base64String[1],"profile.png");
+
+        //Using javascript with Isolation
+        var module = await jsRuntime.InvokeAsync<IJSObjectReference>("import","./js/siteIsolation.js");
+        await module.InvokeVoidAsync("downloadFileIsolation","image/png",base64String[1],"profile.png");
+
     }
 
 

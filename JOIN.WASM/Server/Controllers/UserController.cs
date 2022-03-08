@@ -181,5 +181,37 @@ namespace JOIN.WASM.Server.Controllers
             }
         }
 
+
+        [HttpGet("getallcontacts")]
+        public List<User> GetAllContacts()
+        {
+            List<User> users = new();
+            users.AddRange(Enumerable.Range(0, 20001).Select(x => new User { UserId = x, FirstName = $"First{x}", LastName = $"Last{x}" }));
+
+            return users;
+
+        }
+
+        [HttpGet("getonlyvisiblecontacts")]
+        public List<User> GetOnlyVisibleContacts(int startIndex, int count)
+        {
+            List<User> users = new();
+            users.AddRange(Enumerable.Range(startIndex, count).Select(x => new User { UserId = x, FirstName = $"First{x}", LastName = $"Last{x}" }));
+
+            return users;
+        }
+
+        [HttpGet("getcontactscount")]
+        public async Task<int> GetContactsCount()
+        {
+            return await _context.Users.CountAsync();
+        }
+
+        [HttpGet("getvisiblecontacts")]
+        public async Task<List<User>> GetVisibleContacts(int startIndex, int count)
+        {
+            return await _context.Users.Skip(startIndex).Take(count).ToListAsync();
+        }
+
     }
 }
