@@ -6,8 +6,10 @@ namespace JOIN.WASM.Client.ViewModels
     public class SettingsViewModel : ISettingsViewModel
     {
         //properties
+        public long UserId { get; set; }
         public bool Notifications { get; set; }
         public bool DarkTheme { get; set; }
+
         private HttpClient _httpClient;
 
         //methods
@@ -20,14 +22,14 @@ namespace JOIN.WASM.Client.ViewModels
         }
         public async Task GetProfile()
         {
-            User user = await _httpClient.GetFromJsonAsync<User>($"api/user/getprofile/10");
+            User user = await _httpClient.GetFromJsonAsync<User>($"api/user/getprofile/{this.UserId}");
             LoadCurrentObject(user);
         }
         public async Task Save()
         {
-            await _httpClient.GetFromJsonAsync<User>($"api/user/updatetheme?userId={10}&value={this.DarkTheme.ToString()}");
+            await _httpClient.GetFromJsonAsync<User>($"api/user/updatetheme?userId={this.UserId}&value={this.DarkTheme.ToString()}");
 
-            await _httpClient.GetFromJsonAsync<User>($"api/user/updatenotifications?userId={10}&value={this.Notifications.ToString()}");
+            await _httpClient.GetFromJsonAsync<User>($"api/user/updatenotifications?userId={this.UserId}&value={this.Notifications.ToString()}");
         }
         private void LoadCurrentObject(SettingsViewModel settingsViewModel)
         {
